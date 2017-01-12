@@ -38,10 +38,7 @@ static struct evm_result evm_execute(struct evm_instance* instance,
                                      struct evm_uint256be code_hash,
                                      uint8_t const* code,
                                      size_t code_size,
-                                     int64_t gas,
-                                     uint8_t const* input,
-                                     size_t input_size,
-                                     struct evm_uint256be value)
+                                     struct evm_message message)
 {
     struct evm_result ret = {};
 
