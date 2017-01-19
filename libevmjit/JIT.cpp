@@ -142,6 +142,7 @@ public:
 	evm_update_fn updateFn = nullptr;
 	evm_call_fn callFn = nullptr;
 	evm_get_tx_context_fn getTxContextFn = nullptr;
+	evm_get_block_hash_fn getBlockHashFn = nullptr;
 };
 
 
@@ -156,6 +157,7 @@ class SymbolResolver : public llvm::SectionMemoryManager
 			.Case("evm.update", reinterpret_cast<uint64_t>(jit.updateFn))
 			.Case("evm.call", reinterpret_cast<uint64_t>(jit.callFn))
 			.Case("evm.get_tx_context", reinterpret_cast<uint64_t>(jit.getTxContextFn))
+			.Case("evm.blockhash", reinterpret_cast<uint64_t>(jit.getBlockHashFn))
 			.Default(0);
 		if (addr)
 			return {addr, llvm::JITSymbolFlags::Exported};
@@ -275,7 +277,8 @@ extern "C"
 {
 
 static evm_instance* create(evm_query_fn queryFn, evm_update_fn updateFn,
-	evm_call_fn callFn, evm_get_tx_context_fn getTxContextFn)
+	evm_call_fn callFn, evm_get_tx_context_fn getTxContextFn,
+	evm_get_block_hash_fn getBlockHashFn)
 {
 	// Let's always return the same instance. It's a bit of faking, but actually
 	// this might be a compliant implementation.
@@ -284,6 +287,7 @@ static evm_instance* create(evm_query_fn queryFn, evm_update_fn updateFn,
 	jit.updateFn = updateFn;
 	jit.callFn = callFn;
 	jit.getTxContextFn = getTxContextFn;
+	jit.getBlockHashFn = getBlockHashFn;
 	return &jit;
 }
 
